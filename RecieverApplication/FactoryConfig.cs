@@ -15,9 +15,9 @@ namespace RecieverApplication
         }
 
         #region Recieve messagen Factory Settings
-        public void RecieveMessage()
+        public bool RecieveMessage()
         {
-            
+            bool recieved = false;
             try
             {
                 ConnectionFactory factory = new ConnectionFactory { HostName = "localhost" };
@@ -28,10 +28,19 @@ namespace RecieverApplication
                     EventingBasicConsumer reciver = new EventingBasicConsumer(channel);
                     reciver.Received += (sender, e) =>
                     {
-                        var body = e.Body.ToArray();
-                        myMessage.name = Encoding.UTF8.GetString(body);
-                        myMessage.DisplayMessage();
-                     
+                        if (e.Body.IsEmpty)
+                        {
+                            recieved = false;
+                        }
+                        else
+                        {
+                            var body = e.Body.ToArray();
+                            myMessage.name = Encoding.UTF8.GetString(body);
+                            myMessage.DisplayMessage();
+                            recieved = true;
+                        }
+
+
                     };
                     channel.BasicConsume("IQBusinessQueue", autoAck: true, consumer: reciver);
                     Console.ReadLine();
@@ -41,6 +50,8 @@ namespace RecieverApplication
             {
                 Console.WriteLine("Oops, something went wrong trying to retrieve the message, please try again: " + Environment.NewLine + "More Information: " + ex.ToString());
             }
+
+            return recieved;
         }
         #endregion
 

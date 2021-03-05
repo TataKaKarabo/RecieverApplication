@@ -5,7 +5,7 @@ using System.Text;
 namespace RecieverApplication
 {
 
-    public class Message
+    public class Message: IMessage
     {
         public string name { set; get; }
         public string responce { set; get; }

@@ -1,0 +1,2 @@
+# RecieverApplication
+RabbitMQ RecieverApplication
